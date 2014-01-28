@@ -91,7 +91,7 @@ static FinderExt *_instance = nil;
     
     NSArray *items = [[ILFinderMenu sharedInstance] selectedItems];
     
-    NSString *theScript = [NSString stringWithFormat:@"tell application \"Terminal\" to do script \"cd \\\"%@\\\"\"", [items objectAtIndex:0]];
+    NSString *theScript = [NSString stringWithFormat:@"tell application \"Terminal\"\n\t do script \"cd \\\"%@\\\"\" \n\t activate \n end tell", [items objectAtIndex:0]];
     
     NSAppleScript *nas = [[NSAppleScript alloc] initWithSource:theScript];
     NSDictionary *errorDict;
