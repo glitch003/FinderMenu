@@ -46,10 +46,12 @@ static FinderExt *_instance = nil;
 
 - (NSMenuItem *)createMenuItem
 {
-  NSMenuItem *menuItem = [[NSMenuItem alloc] initWithTitle:@"Test menu"
-                                                    action:nil
-                                             keyEquivalent:@""];
-  NSMenu *submenu = [[NSMenu alloc] initWithTitle:@"My menu"];
+    NSMenuItem *menuItem = [[NSMenuItem alloc] initWithTitle:@"Open in Terminal" action:@selector(itemClicked:) keyEquivalent:@""];
+    [menuItem setTarget:self];
+    [menuItem setEnabled:YES];
+    
+  /*
+    NSMenu *submenu = [[NSMenu alloc] initWithTitle:@"My menu"];
   [submenu setAutoenablesItems:NO];
   [[submenu addItemWithTitle:@"Item 1"
                        action:@selector(itemClicked:)
@@ -60,6 +62,7 @@ static FinderExt *_instance = nil;
                 keyEquivalent:@""]
    setTarget:self];
   [menuItem setSubmenu:submenu];
+   */
   return menuItem;
 }
 
@@ -76,13 +79,27 @@ static FinderExt *_instance = nil;
 
 - (void)itemClicked:(id)sender
 {
-  NSMenuItem *item = (NSMenuItem *)sender;
+  /*
+   NSMenuItem *item = (NSMenuItem *)sender;
   [[NSAlert alertWithMessageText:[NSString stringWithFormat:@"%@ clicked", [item title]]
                    defaultButton:nil
                  alternateButton:nil
                      otherButton:nil
        informativeTextWithFormat:@"Selected files: %@", [[ILFinderMenu sharedInstance] selectedItems]]
    runModal];
+   */
+    
+    NSArray *items = [[ILFinderMenu sharedInstance] selectedItems];
+    
+    NSString *theScript = [NSString stringWithFormat:@"tell application \"Terminal\" to do script \"cd \\\"%@\\\"\"", [items objectAtIndex:0]];
+    
+    NSAppleScript *nas = [[NSAppleScript alloc] initWithSource:theScript];
+    NSDictionary *errorDict;
+    NSString *result = [[nas executeAndReturnError:&errorDict] stringValue];
+    
+    //NSLog(@"result: %@", result);
+    
+    
 }
 
 @end
